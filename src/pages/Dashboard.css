@@ -1,0 +1,108 @@
+.dashboard { animation: fadeUp 0.35s ease both; }
+
+.dash-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.dash-title { font-size: 1.9rem; letter-spacing: -0.02em; }
+.dash-sub { color: var(--muted); font-size: 0.875rem; margin-top: 4px; font-weight: 500; }
+.dash-actions { display: flex; gap: 10px; align-items: center; }
+
+/* Empty state */
+.dash-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--muted);
+  gap: 10px;
+}
+.empty-icon { font-size: 3rem; margin-bottom: 8px; opacity: 0.4; }
+.dash-empty h2 { font-size: 1.25rem; color: var(--text); font-weight: 700; }
+.dash-empty p { font-size: 0.9rem; max-width: 320px; }
+
+/* List */
+.trans-list { display: flex; flex-direction: column; gap: 8px; }
+
+.trans-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 15px 18px;
+  transition: var(--transition);
+  animation: fadeUp 0.3s ease both;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+.trans-row:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 12px rgba(37,99,235,0.1);
+  transform: translateY(-1px);
+}
+
+.dark .trans-row { background: var(--bg2); }
+
+.trans-icon {
+  width: 38px; height: 38px;
+  background: #eff6ff;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.dark .trans-icon { background: rgba(37,99,235,0.12); }
+
+.trans-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.trans-date { font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+.trans-preview {
+  font-size: 0.875rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.trans-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.trans-dur, .trans-loc {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.trans-del {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.trans-del:hover { color: var(--danger); background: #fee2e2; }
+.dark .trans-del:hover { background: rgba(239,68,68,0.12); }

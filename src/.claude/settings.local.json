@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Jeckito Pay\\\\Documents\\\\AppPsicoaudios\\\\AppPsicoaudios-backend\" -Recurse -Force)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)",
+      "Bash(Remove-Item *)"
+    ]
+  }
+}
