@@ -89,7 +89,7 @@ export default function Transcripcion() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <span style={{ fontSize: '24px' }}>🔊</span>
             <audio controls style={{ flex: 1, height: '40px' }}>
-              <source src={trans.audioUrl} type="audio/webm" />
+              <source src={`/api/audio/${id}/download`} type="audio/mp4" />
               Tu navegador no soporta reproducción de audio
             </audio>
           </div>
