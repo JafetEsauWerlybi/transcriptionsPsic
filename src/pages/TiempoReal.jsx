@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './TiempoReal.css'
 
+const DURACION_MAXIMA = 30 * 60 // 30 minutos en segundos
+
 export default function TiempoReal() {
   const [estado,     setEstado]     = useState('idle') // idle | conectando | grabando | guardando
   const [segmentos,  setSegmentos]  = useState([])
@@ -46,7 +48,16 @@ const ws = new WebSocket(`wss://transcriptionspsicbef-production.up.railway.app/
         recorder.start(250)
         mediaRef.current = { stream, recorder }
         setEstado('grabando')
-        timerRef.current = setInterval(() => setTiempo(t => t + 1), 1000)
+        timerRef.current = setInterval(() => {
+          setTiempo(t => {
+            const nuevoTiempo = t + 1
+            if (nuevoTiempo >= DURACION_MAXIMA) {
+              // Detener automáticamente al alcanzar 30 minutos
+              detener(false)
+            }
+            return nuevoTiempo
+          })
+        }, 1000)
       }
 
       ws.onmessage = (e) => {
@@ -125,7 +136,16 @@ const ws = new WebSocket(`wss://transcriptionspsicbef-production.up.railway.app/
         <div className="rt-status">
           {estado === 'idle'       && 'Listo para grabar'}
           {estado === 'conectando' && 'Conectando con el servidor...'}
-          {estado === 'grabando'   && 'Grabando — habla con claridad'}
+          {estado === 'grabando'   && (
+            <>
+              Grabando — habla con claridad
+              {tiempo > DURACION_MAXIMA - 120 && (
+                <div style={{ color: '#ff6b5a', marginTop: '8px', fontSize: '14px', fontWeight: 'bold' }}>
+                  ⚠ Límite de 30 minutos próximo
+                </div>
+              )}
+            </>
+          )}
           {estado === 'guardando'  && 'Guardando transcripción...'}
         </div>
 

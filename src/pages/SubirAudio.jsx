@@ -22,8 +22,8 @@ export default function SubirAudio() {
       setErrorMsg(`Formato no soportado. Usa: ${FORMATOS.join(', ')}`)
       return
     }
-    if (file.size > 100 * 1024 * 1024) {
-      setErrorMsg('El archivo no debe superar 100 MB')
+    if (file.size > 300 * 1024 * 1024) {
+      setErrorMsg('El archivo no debe superar 300 MB')
       return
     }
     setArchivo(file)
