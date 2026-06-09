@@ -83,6 +83,19 @@ export default function Transcripcion() {
         </div>
       </div>
 
+      {/* Reproductor de audio */}
+      {trans.audioUrl && (
+        <div className="td-player card">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '24px' }}>🔊</span>
+            <audio controls style={{ flex: 1, height: '40px' }}>
+              <source src={trans.audioUrl} type="audio/webm" />
+              Tu navegador no soporta reproducción de audio
+            </audio>
+          </div>
+        </div>
+      )}
+
       {estado === 'procesando' && (
         <div className="td-processing card">
           <div className="proc-dots"><span /><span /><span /></div>

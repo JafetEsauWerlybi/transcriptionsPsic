@@ -150,6 +150,16 @@
 }
 .seg-txt { font-size: 0.875rem; line-height: 1.6; color: var(--text); font-weight: 500; }
 
+/* Reproductor de audio */
+.td-player {
+  margin-bottom: 24px;
+  padding: 16px 20px;
+  background: var(--bg2);
+}
+.td-player audio {
+  accent-color: var(--accent);
+}
+
 /* Texto completo */
 .td-full-text {
   font-size: 0.9rem;
