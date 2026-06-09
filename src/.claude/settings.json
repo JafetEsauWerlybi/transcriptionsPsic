@@ -7,7 +7,8 @@
       "Bash(npm list *)"
     ],
     "additionalDirectories": [
-      "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\services"
+      "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\services",
+      "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\controllers"
     ]
   }
 }
