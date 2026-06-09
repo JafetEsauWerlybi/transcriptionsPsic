@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Jeckito Pay/Documents/AppPsicoaudios/AppPsicoaudios-frontend/**)",
+      "Bash(cd \"c:\\\\Users\\\\Jeckito Pay\\\\Documents\" && ls -la AppPsicoaudios*)",
+      "Read(//c/Users/Jeckito Pay/Documents/**)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\services"
+    ]
+  }
+}

@@ -20,9 +20,9 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     try {
+      const { data } = await loginApi(form);
+      login(data.token, data.nombre);
       navigate("/");
-      // const { data } = await loginApi(form);
-      // login(data.token, data.nombre);
     } catch (err) {
       setError(err.response?.data?.error || "Error al iniciar sesión");
     } finally {
@@ -54,7 +54,7 @@ export default function Login() {
               value={form.email}
               onChange={handleChange}
               placeholder="tu@correo.com"
-              // required
+              required
             />
           </div>
           <div className="field">
@@ -65,7 +65,7 @@ export default function Login() {
               value={form.password}
               onChange={handleChange}
               placeholder="••••••••"
-              // required
+              required
             />
           </div>
 

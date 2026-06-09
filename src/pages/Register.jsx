@@ -18,14 +18,16 @@ export default function Register() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    navigate('/')
-    // try {
-    //   const { data } = await registerApi(form)
-    //   login(data.token, data.nombre)
-    //   navigate('/')
-    // } catch (err) {
-    //   setError(err.response?.data?.error || 'Error al registrarse')
-    // }
+    setLoading(true)
+    try {
+      const { data } = await registerApi(form)
+      login(data.token, data.nombre)
+      navigate('/')
+    } catch (err) {
+      setError(err.response?.data?.error || 'Error al registrarse')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

@@ -9,10 +9,8 @@ import TiempoReal from './pages/TiempoReal'
 import Layout from './components/Layout'
 
 function PrivateRoute({ children }) {
-  // Auth desactivada temporalmente para desarrollo de UI
-  return children
-  // const { isAuth } = useAuth()
-  // return isAuth ? children : <Navigate to="/login" replace />
+  const { isAuth } = useAuth()
+  return isAuth ? children : <Navigate to="/login" replace />
 }
 
 export default function App() {
