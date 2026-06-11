@@ -23,6 +23,8 @@ export default function Perfil() {
   const [guardando, setGuardando] = useState(false)
   const [error, setError] = useState('')
   const [exito, setExito] = useState('')
+  const [fixeando, setFixeando] = useState(false)
+  const [limpiando, setLimpiando] = useState(false)
 
   useEffect(() => {
     async function cargar() {
@@ -57,6 +59,41 @@ export default function Perfil() {
       setError(err.response?.data?.error || 'Error al guardar perfil')
     } finally {
       setGuardando(false)
+    }
+  }
+
+  async function handleFixUsuarios() {
+    setFixeando(true)
+    try {
+      const response = await fetch('https://transcriptionspsicbef-production.up.railway.app/api/auth/fix-usuarios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      const data = await response.json()
+      setExito(data.mensaje || '✅ Usuarios arreglados')
+      setTimeout(() => setExito(''), 3000)
+    } catch (err) {
+      setError('Error al arreglar usuarios')
+    } finally {
+      setFixeando(false)
+    }
+  }
+
+  async function handleLimpiarAntiguos() {
+    if (!confirm('¿Eliminar usuarios antiguos (sin usuarioId)?')) return
+    setLimpiando(true)
+    try {
+      const response = await fetch('https://transcriptionspsicbef-production.up.railway.app/api/auth/limpiar-usuarios-antiguos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      const data = await response.json()
+      setExito(data.mensaje || '✅ Documentos antiguos eliminados')
+      setTimeout(() => setExito(''), 3000)
+    } catch (err) {
+      setError('Error al limpiar documentos')
+    } finally {
+      setLimpiando(false)
     }
   }
 
@@ -195,18 +232,48 @@ export default function Perfil() {
           {error && <div className="perfil-error">{error}</div>}
           {exito && <div className="perfil-exito">{exito}</div>}
 
-          <button
-            className="btn-primary"
-            type="submit"
-            disabled={guardando}
-            style={{ width: '100%', justifyContent: 'center', marginTop: '20px' }}
-          >
-            {guardando ? (
-              <><span className="spinner" /> Guardando...</>
-            ) : (
-              <><i className="bi bi-check-circle" /> Guardar cambios</>
-            )}
-          </button>
+          <div style={{ display: 'flex', gap: '12px', marginTop: '20px', flexWrap: 'wrap' }}>
+            <button
+              className="btn-primary"
+              type="submit"
+              disabled={guardando}
+              style={{ flex: 1, minWidth: '150px', justifyContent: 'center' }}
+            >
+              {guardando ? (
+                <><span className="spinner" /> Guardando...</>
+              ) : (
+                <><i className="bi bi-check-circle" /> Guardar cambios</>
+              )}
+            </button>
+            <button
+              className="btn-ghost"
+              type="button"
+              onClick={handleFixUsuarios}
+              disabled={fixeando}
+              title="Arreglar usuarios (agregar usuarioId)"
+              style={{ minWidth: '120px', justifyContent: 'center' }}
+            >
+              {fixeando ? (
+                <><span className="spinner" /> Arreglando...</>
+              ) : (
+                <><i className="bi bi-wrench" /> Fix</>
+              )}
+            </button>
+            <button
+              className="btn-ghost"
+              type="button"
+              onClick={handleLimpiarAntiguos}
+              disabled={limpiando}
+              title="Eliminar documentos antiguos duplicados"
+              style={{ minWidth: '140px', justifyContent: 'center' }}
+            >
+              {limpiando ? (
+                <><span className="spinner" /> Limpiando...</>
+              ) : (
+                <><i className="bi bi-trash" /> Limpiar</>
+              )}
+            </button>
+          </div>
         </form>
       </div>
     </div>
