@@ -8,9 +8,7 @@ import './Perfil.css'
 export default function Perfil() {
   const navigate = useNavigate()
   const [form, setForm] = useState({
-    nombres: '',
-    apellidoPaterno: '',
-    apellidoMaterno: '',
+    nombre: '',
     email: '',
     telefono: '',
     empresa: '',
@@ -87,36 +85,14 @@ export default function Perfil() {
           <div className="form-section">
             <h2><i className="bi bi-person" /> Datos Personales</h2>
             <div className="field">
-              <label>Nombre(s)</label>
+              <label>Nombre Completo</label>
               <input
                 type="text"
-                name="nombres"
-                value={form.nombres}
+                name="nombre"
+                value={form.nombre}
                 onChange={handleChange}
-                disabled
+                placeholder="Tu nombre completo"
               />
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              <div className="field">
-                <label>Apellido Paterno</label>
-                <input
-                  type="text"
-                  name="apellidoPaterno"
-                  value={form.apellidoPaterno}
-                  onChange={handleChange}
-                  disabled
-                />
-              </div>
-              <div className="field">
-                <label>Apellido Materno</label>
-                <input
-                  type="text"
-                  name="apellidoMaterno"
-                  value={form.apellidoMaterno}
-                  onChange={handleChange}
-                  disabled
-                />
-              </div>
             </div>
             <div className="field">
               <label>Correo</label>
@@ -126,6 +102,7 @@ export default function Perfil() {
                 value={form.email}
                 onChange={handleChange}
                 disabled
+                style={{ opacity: 0.6 }}
               />
             </div>
             <div className="field">

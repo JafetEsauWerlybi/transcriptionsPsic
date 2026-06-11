@@ -7,9 +7,7 @@ import './Auth.css'
 
 export default function Register() {
   const [form, setForm] = useState({
-    nombres: '',
-    apellidoPaterno: '',
-    apellidoMaterno: '',
+    nombre: '',
     email: '',
     password: ''
   })
@@ -51,38 +49,15 @@ export default function Register() {
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="field">
-            <label>Nombre(s)</label>
+            <label>Nombre completo</label>
             <input
               type="text"
-              name="nombres"
-              value={form.nombres}
+              name="nombre"
+              value={form.nombre}
               onChange={handleChange}
-              placeholder="Juan"
+              placeholder="Juan García López"
               required
             />
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <div className="field">
-              <label>Apellido Paterno</label>
-              <input
-                type="text"
-                name="apellidoPaterno"
-                value={form.apellidoPaterno}
-                onChange={handleChange}
-                placeholder="García"
-                required
-              />
-            </div>
-            <div className="field">
-              <label>Apellido Materno</label>
-              <input
-                type="text"
-                name="apellidoMaterno"
-                value={form.apellidoMaterno}
-                onChange={handleChange}
-                placeholder="López"
-              />
-            </div>
           </div>
           <div className="field">
             <label>Correo electrónico</label>
