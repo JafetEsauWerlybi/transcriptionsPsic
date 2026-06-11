@@ -12,14 +12,18 @@
       "Bash(Get-Content \"C:\\\\Users\\\\JECKIT~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-Jeckito-Pay-Documents-AppPsicoaudios-AppPsicoaudios-frontend-src\\\\5626071f-c059-4191-b521-78968e9072b8\\\\tasks\\\\blfgaf90t.output\" -Tail 20)",
       "Bash(chromium-cli --screenshot /tmp/login.png --viewport-size 800x600 http://localhost:5174/login)",
       "Bash(curl -s http://localhost:5174/login)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(git rm *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\services",
       "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\controllers",
       "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\websocket",
       "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\middleware",
-      "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\routes"
+      "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\routes",
+      "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\AppPsicoaudios-frontend"
     ]
   }
 }
