@@ -1,7 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { obtenerTranscripcion, resumirTranscripcion } from '../services/api'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
+import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } from 'docx'
+import { saveAs } from 'file-saver'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import './Transcripcion.css'
 
@@ -63,6 +67,15 @@ export default function Transcripcion() {
 
   function obtenerNombreLocutor(id) {
     return nombresLocutores[id] || `Locutor ${id}`
+  }
+
+  function limpiarMarkdown(texto) {
+    if (!texto) return ''
+    return texto
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/\*(.+?)\*/g, '$1')
+      .replace(/`(.+?)`/g, '$1')
+      .trim()
   }
 
   function renderConFormato(texto) {
@@ -147,6 +160,223 @@ export default function Transcripcion() {
     return bloques
   }
 
+  const timelineRef = useRef(null)
+  const resumenRef = useRef(null)
+
+  async function descargarTranscripcionPDF() {
+    if (!timelineRef.current) return
+    try {
+      const canvas = await html2canvas(timelineRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      })
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      })
+      const imgWidth = 210
+      const pageHeight = 297
+      let imgHeight = (canvas.height * imgWidth) / canvas.width
+      let heightLeft = imgHeight
+
+      let position = 0
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+      heightLeft -= pageHeight
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight
+        pdf.addPage()
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+        heightLeft -= pageHeight
+      }
+
+      pdf.save(`Transcripcion_${id}.pdf`)
+    } catch (err) {
+      console.error('Error generando PDF:', err)
+      alert('Error al generar PDF de transcripción')
+    }
+  }
+
+  async function descargarResumenPDF() {
+    if (!resumenRef.current) return
+    try {
+      const canvas = await html2canvas(resumenRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      })
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      })
+      const imgWidth = 210
+      const pageHeight = 297
+      let imgHeight = (canvas.height * imgWidth) / canvas.width
+      let heightLeft = imgHeight
+
+      let position = 0
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+      heightLeft -= pageHeight
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight
+        pdf.addPage()
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight)
+        heightLeft -= pageHeight
+      }
+
+      pdf.save(`Resumen_${id}.pdf`)
+    } catch (err) {
+      console.error('Error generando PDF:', err)
+      alert('Error al generar PDF de resumen')
+    }
+  }
+
+  async function descargarTranscripcionWord() {
+    const paragrafos = [
+      new Paragraph({
+        text: 'Transcripción',
+        heading: HeadingLevel.HEADING_1,
+        spacing: { line: 360, after: 200 }
+      }),
+      new Paragraph({
+        text: `Duración: ${formatDuracion(duracionSegundos)}`,
+        spacing: { after: 100 }
+      }),
+      new Paragraph({
+        text: `Locutores: ${locutores.length}`,
+        spacing: { after: 100 }
+      }),
+      new Paragraph({
+        text: `Fecha: ${new Date(creadoEn).toLocaleDateString('es-MX')}`,
+        spacing: { after: 300 }
+      }),
+      new Paragraph({
+        text: 'Timeline',
+        heading: HeadingLevel.HEADING_2,
+        spacing: { before: 200, after: 200 }
+      })
+    ]
+
+    obtenerSegmentosOrdenados().forEach((seg) => {
+      paragrafos.push(
+        new Paragraph({
+          text: `[${formatTiempo(seg.inicio)}] ${obtenerNombreLocutor(seg.locutor)}: ${seg.texto}`,
+          spacing: { after: 100 }
+        })
+      )
+    })
+
+    const doc = new Document({
+      sections: [
+        {
+          children: paragrafos
+        }
+      ]
+    })
+
+    try {
+      const blob = await Packer.toBlob(doc)
+      saveAs(blob, `Transcripcion_${id}.docx`)
+    } catch (err) {
+      console.error('Error generando Word:', err)
+      alert('Error al generar archivo Word')
+    }
+  }
+
+  async function descargarResumenWord() {
+    if (!resumen) {
+      alert('No hay resumen disponible para descargar')
+      return
+    }
+
+    const paragrafos = [
+      new Paragraph({
+        text: 'Resumen - Análisis con IA',
+        heading: HeadingLevel.HEADING_1,
+        spacing: { line: 360, after: 200 }
+      }),
+      new Paragraph({
+        text: 'Generado por: Claude AI',
+        spacing: { after: 100 }
+      }),
+      new Paragraph({
+        text: `Fecha: ${new Date().toLocaleDateString('es-MX')}`,
+        spacing: { after: 300 }
+      })
+    ]
+
+    const bloques = parseResumen(resumen)
+    bloques.forEach((bloque) => {
+      if (bloque.tipo === 'titulo') {
+        paragrafos.push(
+          new Paragraph({
+            text: limpiarMarkdown(bloque.contenido),
+            heading: HeadingLevel.HEADING_2,
+            spacing: { before: 200, after: 100 }
+          })
+        )
+      } else if (bloque.tipo === 'parrafo') {
+        paragrafos.push(
+          new Paragraph({
+            text: limpiarMarkdown(bloque.contenido),
+            spacing: { after: 150 }
+          })
+        )
+      } else if (bloque.tipo === 'items') {
+        bloque.items.forEach((item) => {
+          paragrafos.push(
+            new Paragraph({
+              text: limpiarMarkdown(item),
+              bullet: { level: 0 },
+              spacing: { after: 75 }
+            })
+          )
+        })
+      } else if (bloque.tipo === 'tabla') {
+        bloque.filas.forEach((fila, idx) => {
+          const textoFila = fila.map(c => limpiarMarkdown(c)).join(' | ')
+          paragrafos.push(
+            new Paragraph({
+              text: textoFila,
+              spacing: { after: 100 },
+              bold: idx === 0
+            })
+          )
+        })
+      } else if (bloque.tipo === 'nota') {
+        paragrafos.push(
+          new Paragraph({
+            text: limpiarMarkdown(bloque.contenido),
+            italic: true,
+            spacing: { before: 100, after: 150 }
+          })
+        )
+      }
+    })
+
+    const doc = new Document({
+      sections: [
+        {
+          children: paragrafos
+        }
+      ]
+    })
+
+    try {
+      const blob = await Packer.toBlob(doc)
+      saveAs(blob, `Resumen_${id}.docx`)
+    } catch (err) {
+      console.error('Error generando Word:', err)
+      alert('Error al generar archivo Word')
+    }
+  }
+
   async function guardarNombresLocutores() {
     setGuardandoNombres(true)
     try {
@@ -200,6 +430,16 @@ export default function Transcripcion() {
           <span className="td-info"><i className="bi bi-people" /> {locutores.length} locutor{locutores.length !== 1 ? 'es' : ''}</span>
           <span className="td-info"><i className="bi bi-calendar" /> {new Date(creadoEn).toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric' })}</span>
         </div>
+        {estado === 'completado' && (
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <button className="btn-ghost" onClick={descargarTranscripcionPDF} title="Descargar transcripción en PDF">
+              <i className="bi bi-file-pdf" /> PDF
+            </button>
+            <button className="btn-ghost" onClick={descargarTranscripcionWord} title="Descargar transcripción en Word">
+              <i className="bi bi-file-word" /> Word
+            </button>
+          </div>
+        )}
       </div>
 
       {trans.audioUrl && (
@@ -263,41 +503,64 @@ export default function Transcripcion() {
             {resumenExpanded && (
               <>
                 {errorMsg && <div className="td-error">{errorMsg}</div>}
-                {resumen ? (
-                  <div className="resumen-content">
-                    {parseResumen(resumen).map((bloque, i) => (
-                      <div key={i}>
-                        {bloque.tipo === 'titulo' && <h3 className="resumen-title">{renderConFormato(bloque.contenido)}</h3>}
-                        {bloque.tipo === 'parrafo' && <p className="resumen-text">{renderConFormato(bloque.contenido)}</p>}
-                        {bloque.tipo === 'items' && (
-                          <div className="resumen-items">
-                            {bloque.items.map((item, j) => (
-                              <div key={j} className="resumen-item">
-                                <span className="item-dot" />
-                                <span>{renderConFormato(item)}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                        {bloque.tipo === 'tabla' && (
-                          <div className="resumen-tabla">
-                            {bloque.filas.map((fila, j) => (
-                              <div key={j} className={`tabla-fila ${j === 0 ? 'tabla-header' : ''}`}>
-                                {fila.map((celda, k) => (
-                                  <div key={k} className="tabla-celda">{renderConFormato(celda)}</div>
-                                ))}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                        {bloque.tipo === 'nota' && (
-                          <div className="resumen-nota">
-                            <i className="bi bi-exclamation-circle" />
-                            <span>{renderConFormato(bloque.contenido)}</span>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                {resumen && !resumiendo ? (
+                  <div>
+                    <div className="resumen-content" ref={resumenRef}>
+                      {parseResumen(resumen).map((bloque, i) => (
+                        <div key={i}>
+                          {bloque.tipo === 'titulo' && <h3 className="resumen-title">{renderConFormato(bloque.contenido)}</h3>}
+                          {bloque.tipo === 'parrafo' && <p className="resumen-text">{renderConFormato(bloque.contenido)}</p>}
+                          {bloque.tipo === 'items' && (
+                            <div className="resumen-items">
+                              {bloque.items.map((item, j) => (
+                                <div key={j} className="resumen-item">
+                                  <span className="item-dot" />
+                                  <span>{renderConFormato(item)}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {bloque.tipo === 'tabla' && (
+                            <div className="resumen-tabla">
+                              {bloque.filas.map((fila, j) => (
+                                <div key={j} className={`tabla-fila ${j === 0 ? 'tabla-header' : ''}`}>
+                                  {fila.map((celda, k) => (
+                                    <div key={k} className="tabla-celda">{renderConFormato(celda)}</div>
+                                  ))}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {bloque.tipo === 'nota' && (
+                            <div className="resumen-nota">
+                              <i className="bi bi-exclamation-circle" />
+                              <span>{renderConFormato(bloque.contenido)}</span>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ display: 'flex', gap: '12px', marginTop: '16px', flexWrap: 'wrap' }}>
+                      <button
+                        className="btn-ghost"
+                        onClick={handleResumir}
+                        disabled={resumiendo}
+                      >
+                        <i className="bi bi-arrow-clockwise" /> Regenerar
+                      </button>
+                      <button
+                        className="btn-ghost"
+                        onClick={descargarResumenPDF}
+                      >
+                        <i className="bi bi-file-pdf" /> PDF
+                      </button>
+                      <button
+                        className="btn-ghost"
+                        onClick={descargarResumenWord}
+                      >
+                        <i className="bi bi-file-word" /> Word
+                      </button>
+                    </div>
                   </div>
                 ) : !resumiendo ? (
                   <div style={{ padding: '20px 0' }}>
@@ -339,14 +602,19 @@ export default function Transcripcion() {
           </div>
 
           {tab === 'timeline' && (
-            <div className="timeline-simple card">
-              {obtenerSegmentosOrdenados().map((seg, i) => (
-                <div key={i} className="timeline-line">
-                  <span className="timeline-time">{formatTiempo(seg.inicio)}</span>
-                  <span className="timeline-speaker" style={{ color: colorLocutor(seg.locutor) }}>{obtenerNombreLocutor(seg.locutor)}:</span>
-                  <span className="timeline-text">{seg.texto}</span>
-                </div>
-              ))}
+            <div ref={timelineRef} style={{ padding: '20px', background: 'var(--bg2)' }}>
+              <h2 style={{ marginBottom: '20px', fontSize: '24px', fontWeight: 'bold', color: 'var(--fg)' }}>
+                Timeline de Transcripción
+              </h2>
+              <div className="timeline-simple card">
+                {obtenerSegmentosOrdenados().map((seg, i) => (
+                  <div key={i} className="timeline-line">
+                    <span className="timeline-time">{formatTiempo(seg.inicio)}</span>
+                    <span className="timeline-speaker" style={{ color: colorLocutor(seg.locutor) }}>{obtenerNombreLocutor(seg.locutor)}:</span>
+                    <span className="timeline-text">{seg.texto}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
