@@ -1,13 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import 'bootstrap-icons/font/bootstrap-icons.css'
 import './TiempoReal.css'
 
 const DURACION_MAXIMA = 30 * 60 // 30 minutos en segundos
 
 export default function TiempoReal() {
   const [estado,     setEstado]     = useState('idle') // idle | conectando | grabando | guardando
-  const [segmentos,  setSegmentos]  = useState([])
-  const [parcial,    setParcial]    = useState('')
   const [tiempo,     setTiempo]     = useState(0)
   const [idTrans,    setIdTrans]    = useState(null)
   const [error,      setError]      = useState('')
@@ -15,22 +14,15 @@ export default function TiempoReal() {
   const wsRef         = useRef(null)
   const mediaRef      = useRef(null)
   const timerRef      = useRef(null)
-  const bottomRef     = useRef(null)
   const navigate      = useNavigate()
 
   useEffect(() => {
     return () => { detener(true) }
   }, [])
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [segmentos, parcial])
-
   async function iniciar() {
     setEstado('conectando')
     setError('')
-    setSegmentos([])
-    setParcial('')
     setTiempo(0)
 
     const token = localStorage.getItem('token')
@@ -62,13 +54,8 @@ const ws = new WebSocket(`wss://transcriptionspsicbef-production.up.railway.app/
 
       ws.onmessage = (e) => {
         const msg = JSON.parse(e.data)
-        if (msg.tipo === 'inicio')    setIdTrans(msg.transcripcionId)
-        if (msg.tipo === 'parcial')   setParcial(msg.texto)
-        if (msg.tipo === 'segmento') {
-          setSegmentos(s => [...s, msg])
-          setParcial('')
-        }
-        if (msg.tipo === 'error') setError(msg.mensaje)
+        if (msg.tipo === 'inicio')  setIdTrans(msg.transcripcionId)
+        if (msg.tipo === 'error')   setError(msg.mensaje)
       }
 
       ws.onerror = () => setError('Error de conexión con el servidor')
@@ -108,8 +95,6 @@ const ws = new WebSocket(`wss://transcriptionspsicbef-production.up.railway.app/
     return `${String(m).padStart(2,'0')}:${String(s % 60).padStart(2,'0')}`
   }
 
-  const colores = ['var(--accent)', 'var(--accent2)', 'var(--warn)', '#ff9d5a', '#c45aff']
-
   return (
     <div className="realtime-page">
       <div className="rt-header">
@@ -127,7 +112,7 @@ const ws = new WebSocket(`wss://transcriptionspsicbef-production.up.railway.app/
           </div>
         )}
 
-        {estado === 'idle' && <div className="mic-idle">🎙</div>}
+        {estado === 'idle' && <i className="bi bi-mic mic-idle" />}
         {estado === 'conectando' && <div className="loader-ring" />}
         {estado === 'guardando' && <div className="loader-ring" style={{ borderTopColor: 'var(--accent2)' }} />}
 
@@ -140,8 +125,8 @@ const ws = new WebSocket(`wss://transcriptionspsicbef-production.up.railway.app/
             <>
               Grabando — habla con claridad
               {tiempo > DURACION_MAXIMA - 120 && (
-                <div style={{ color: '#ff6b5a', marginTop: '8px', fontSize: '14px', fontWeight: 'bold' }}>
-                  ⚠ Límite de 30 minutos próximo
+                <div style={{ color: '#ff6b5a', marginTop: '8px', fontSize: '14px', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
+                  <i className="bi bi-exclamation-triangle" /> Límite de 30 minutos próximo
                 </div>
               )}
             </>
@@ -165,32 +150,6 @@ const ws = new WebSocket(`wss://transcriptionspsicbef-production.up.railway.app/
         </div>
       </div>
 
-      {/* Transcripción en vivo */}
-      {(segmentos.length > 0 || parcial) && (
-        <div className="rt-transcript card">
-          <div className="rt-trans-header">
-            <span className="rt-trans-title">Transcripción en vivo</span>
-            <span className="badge badge-green">{segmentos.length} segmentos</span>
-          </div>
-          <div className="rt-segments">
-            {segmentos.map((seg, i) => (
-              <div key={i} className="rt-seg">
-                <span className="seg-speaker" style={{ color: colores[seg.locutor?.charCodeAt(0) % colores.length] }}>
-                  Locutor {seg.locutor}
-                </span>
-                <p className="seg-text">{seg.texto}</p>
-              </div>
-            ))}
-            {parcial && (
-              <div className="rt-seg rt-parcial">
-                <span className="seg-speaker" style={{ color: 'var(--muted)' }}>•••</span>
-                <p className="seg-text">{parcial}</p>
-              </div>
-            )}
-            <div ref={bottomRef} />
-          </div>
-        </div>
-      )}
     </div>
   )
 }

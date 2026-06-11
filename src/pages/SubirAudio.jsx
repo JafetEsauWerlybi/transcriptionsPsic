@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { subirAudio, obtenerEstado } from '../services/api'
+import 'bootstrap-icons/font/bootstrap-icons.css'
 import './SubirAudio.css'
 
 const FORMATOS = ['mp3', 'wav', 'm4a', 'webm', 'ogg']
@@ -108,7 +109,7 @@ export default function SubirAudio() {
             />
             {archivo ? (
               <div className="file-selected">
-                <div className="file-icon">🎵</div>
+                <i className="bi bi-music file-icon" />
                 <div className="file-info">
                   <span className="file-name">{archivo.name}</span>
                   <span className="file-size">{formatBytes(archivo.size)}</span>
@@ -119,7 +120,7 @@ export default function SubirAudio() {
               </div>
             ) : (
               <div className="drop-placeholder">
-                <div className="drop-icon">📁</div>
+                <i className="bi bi-folder drop-icon" />
                 <p className="drop-text">Arrastra tu audio aquí</p>
                 <p className="drop-sub">o haz clic para seleccionar</p>
                 <p className="drop-formats">MP3 · WAV · M4A · WEBM · OGG — máx. 100 MB</p>
@@ -162,7 +163,7 @@ export default function SubirAudio() {
 
       {estado === 'listo' && (
         <div className="subir-success card">
-          <div className="success-icon">✅</div>
+          <i className="bi bi-check-circle success-icon" />
           <h2>¡Transcripción lista!</h2>
           <p>Tu audio fue transcrito exitosamente con separación de locutores</p>
           <button className="btn-primary" onClick={() => navigate(`/t/${idTrans}`)}>
@@ -173,7 +174,7 @@ export default function SubirAudio() {
 
       {estado === 'error' && (
         <div className="subir-err-box card">
-          <div className="err-icon">❌</div>
+          <i className="bi bi-x-circle err-icon" />
           <h2>Algo salió mal</h2>
           <p>{errorMsg}</p>
           <button className="btn-ghost" onClick={() => { setEstado('idle'); setArchivo(null) }}>

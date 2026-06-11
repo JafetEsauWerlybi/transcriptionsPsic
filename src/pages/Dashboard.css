@@ -1,4 +1,4 @@
-.dashboard { animation: fadeUp 0.35s ease both; }
+.dashboard { animation: fadeUp 0.35s ease both; width: 100%; display: flex; flex-direction: column; }
 
 .dash-header {
   display: flex;

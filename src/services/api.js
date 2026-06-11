@@ -11,6 +11,8 @@ api.interceptors.request.use((cfg) => {
 // AUTH
 export const register = (data) => api.post("/auth/register", data);
 export const login = (data) => api.post("/auth/login", data);
+export const obtenerPerfil = () => api.get("/auth/perfil");
+export const actualizarPerfil = (data) => api.put("/auth/perfil", data);
 
 // AUDIO
 export const subirAudio = (formData) => api.post("/audio/upload", formData);

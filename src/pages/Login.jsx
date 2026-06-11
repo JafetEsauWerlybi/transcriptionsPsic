@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { login as loginApi } from "../services/api";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "./Auth.css";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -59,14 +61,24 @@ export default function Login() {
           </div>
           <div className="field">
             <label>Contraseña</label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              required
-            />
+            <div className="password-field">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+              >
+                <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`} />
+              </button>
+            </div>
           </div>
 
           {error && <div className="auth-error">{error}</div>}

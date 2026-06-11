@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { listarTranscripciones, eliminarTranscripcion } from "../services/api";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "./Dashboard.css";
 
 function formatDuracion(seg) {
@@ -139,7 +140,7 @@ export default function Dashboard() {
         </div>
       ) : lista.length === 0 ? (
         <div className="dash-empty">
-          <div className="empty-icon">🎙</div>
+          <i className="bi bi-mic empty-icon" />
           <h2>Sin transcripciones aún</h2>
           <p>Sube un archivo de audio o usa el micrófono para empezar</p>
           <div style={{ display: "flex", gap: "12px", marginTop: "16px" }}>

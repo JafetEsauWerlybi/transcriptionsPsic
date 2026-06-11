@@ -4,7 +4,15 @@
       "Read(//c/Users/Jeckito Pay/Documents/AppPsicoaudios/AppPsicoaudios-frontend/**)",
       "Bash(cd \"c:\\\\Users\\\\Jeckito Pay\\\\Documents\" && ls -la AppPsicoaudios*)",
       "Read(//c/Users/Jeckito Pay/Documents/**)",
-      "Bash(npm list *)"
+      "Bash(npm list *)",
+      "Skill(run)",
+      "Skill(run:*)",
+      "Bash(npm run *)",
+      "Bash(Start-Sleep -Seconds 3)",
+      "Bash(Get-Content \"C:\\\\Users\\\\JECKIT~1\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-Jeckito-Pay-Documents-AppPsicoaudios-AppPsicoaudios-frontend-src\\\\5626071f-c059-4191-b521-78968e9072b8\\\\tasks\\\\blfgaf90t.output\" -Tail 20)",
+      "Bash(chromium-cli --screenshot /tmp/login.png --viewport-size 800x600 http://localhost:5174/login)",
+      "Bash(curl -s http://localhost:5174/login)",
+      "Bash(npm install *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\services",

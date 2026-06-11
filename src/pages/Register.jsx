@@ -2,12 +2,20 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { register as registerApi } from '../services/api'
+import 'bootstrap-icons/font/bootstrap-icons.css'
 import './Auth.css'
 
 export default function Register() {
-  const [form, setForm]       = useState({ nombre: '', email: '', password: '' })
+  const [form, setForm] = useState({
+    nombres: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
+    email: '',
+    password: ''
+  })
   const [error, setError]     = useState('')
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const { login }             = useAuth()
   const navigate              = useNavigate()
 
@@ -43,15 +51,38 @@ export default function Register() {
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="field">
-            <label>Nombre</label>
+            <label>Nombre(s)</label>
             <input
               type="text"
-              name="nombre"
-              value={form.nombre}
+              name="nombres"
+              value={form.nombres}
               onChange={handleChange}
-              placeholder="Tu nombre"
+              placeholder="Juan"
               required
             />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div className="field">
+              <label>Apellido Paterno</label>
+              <input
+                type="text"
+                name="apellidoPaterno"
+                value={form.apellidoPaterno}
+                onChange={handleChange}
+                placeholder="García"
+                required
+              />
+            </div>
+            <div className="field">
+              <label>Apellido Materno</label>
+              <input
+                type="text"
+                name="apellidoMaterno"
+                value={form.apellidoMaterno}
+                onChange={handleChange}
+                placeholder="López"
+              />
+            </div>
           </div>
           <div className="field">
             <label>Correo electrónico</label>
@@ -66,14 +97,24 @@ export default function Register() {
           </div>
           <div className="field">
             <label>Contraseña</label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder="Mínimo 6 caracteres"
-              required
-            />
+            <div className="password-field">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="Mínimo 6 caracteres"
+                required
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+              >
+                <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`} />
+              </button>
+            </div>
           </div>
 
           {error && <div className="auth-error">{error}</div>}

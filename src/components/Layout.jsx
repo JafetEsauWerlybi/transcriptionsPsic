@@ -1,6 +1,7 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useState, useEffect } from 'react'
+import 'bootstrap-icons/font/bootstrap-icons.css'
 import './Layout.css'
 
 const IconMic    = () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
@@ -30,7 +31,7 @@ export default function Layout() {
     <div className="layout">
       <aside className="sidebar">
         <div className="sidebar-logo">
-          <span className="logo-icon">🎙</span>
+          <i className="bi bi-mic logo-icon" />
           <span className="logo-text">Psico<em>Audios</em></span>
         </div>
 
@@ -47,10 +48,10 @@ export default function Layout() {
         </nav>
 
         <div className="sidebar-footer">
-          <div className="user-chip">
+          <button className="user-chip" onClick={() => navigate('/perfil')} title="Ver perfil">
             <div className="user-avatar">{nombre?.charAt(0).toUpperCase()}</div>
             <span className="user-name">{nombre}</span>
-          </div>
+          </button>
           <div className="sidebar-footer-actions">
             <button
               className="btn-icon"
