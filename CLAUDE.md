@@ -20,7 +20,7 @@ Post-procesamiento inteligente con Claude API: resúmenes, minutas, puntos clave
 | **Autenticación** | JWT + bcrypt | Sin terceros por ahora |
 | **Frontend web** | React + Vite | |
 | **App móvil** | React Native | Android primero, Google Play |
-| **Hosting Backend** | Railway | Plan Hobby ~$87 MXN/mes |
+| **Hosting Backend** | Render | Plan gratuito — `https://transcriptionspsicbef.onrender.com` |
 | **Hosting Frontend** | Azure Static Web Apps | Gratis |
 | **Post-procesamiento IA** | Claude API (Anthropic) | Resúmenes, minutas, tareas |
 

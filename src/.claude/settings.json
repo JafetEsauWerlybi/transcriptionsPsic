@@ -15,7 +15,8 @@
       "Bash(npm install *)",
       "Bash(git rm *)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Read(//c/Users/Jeckito Pay/Downloads/**)"
     ],
     "additionalDirectories": [
       "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\services",
@@ -23,7 +24,8 @@
       "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\websocket",
       "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\middleware",
       "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\apptrPsicoaudios-backend\\src\\routes",
-      "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\AppPsicoaudios-frontend"
+      "c:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\AppPsicoaudios-frontend",
+      "C:\\Users\\Jeckito Pay\\Documents\\AppPsicoaudios\\AppPsicoaudios-frontend"
     ]
   }
 }

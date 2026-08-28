@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import './TiempoReal.css'
 
-const DURACION_MAXIMA = 30 * 60 // 30 minutos en segundos
+const DURACION_MAXIMA = 60 * 60 // 60 minutos en segundos
 
 export default function TiempoReal() {
   const [estado,     setEstado]     = useState('idle') // idle | conectando | grabando | guardando
@@ -29,7 +29,7 @@ export default function TiempoReal() {
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-const ws = new WebSocket(`wss://transcriptionspsicbef-production.up.railway.app/ws/live?token=${token}`)
+      const ws = new WebSocket(`wss://transcriptionspsicbef.onrender.com/ws/live?token=${token}`)
       ws.onopen = () => {
         const recorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' })
         recorder.ondataavailable = (e) => {
