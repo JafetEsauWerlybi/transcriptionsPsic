@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const api = axios.create({ baseURL: 'https://transcriptionspsicbef-production.up.railway.app/api' });
+const api = axios.create({
+  baseURL: "https://transcriptionspsicbef.onrender.com/api",
+});
 
 api.interceptors.request.use((cfg) => {
   const token = localStorage.getItem("token");
