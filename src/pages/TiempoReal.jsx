@@ -29,7 +29,7 @@ export default function TiempoReal() {
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      const ws = new WebSocket(`wss://transcriptionspsicbef.onrender.com/ws/live?token=${token}`)
+      const ws = new WebSocket(`wss://transcriptionspsicbef-production-621c.up.railway.app/ws/live?token=${token}`)
       ws.onopen = () => {
         const recorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' })
         recorder.ondataavailable = (e) => {

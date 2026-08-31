@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://transcriptionspsicbef.onrender.com/api",
+  baseURL: "https://transcriptionspsicbef-production-621c.up.railway.app/api",
 });
 
 api.interceptors.request.use((cfg) => {
