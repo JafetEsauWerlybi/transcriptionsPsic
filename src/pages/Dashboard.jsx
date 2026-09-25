@@ -24,6 +24,7 @@ function formatFecha(iso) {
 function badgeEstado(estado) {
   const map = {
     completado: { cls: "badge-green", txt: "Completado" },
+    subiendo: { cls: "badge-yellow", txt: "Subiendo" },
     procesando: { cls: "badge-yellow", txt: "Procesando" },
     error: { cls: "badge-red", txt: "Error" },
   };

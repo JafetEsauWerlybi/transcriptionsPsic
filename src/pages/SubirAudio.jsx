@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { subirAudio, obtenerEstado } from '../services/api'
+import { BlockBlobClient } from '@azure/storage-blob'
+import { iniciarUpload, confirmarUpload, obtenerEstado } from '../services/api'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import './SubirAudio.css'
 
@@ -43,18 +44,20 @@ export default function SubirAudio() {
     setProgreso(0)
     setErrorMsg('')
 
-    const form = new FormData()
-    form.append('audio', archivo)
-
     try {
-      // Simular progreso de subida
-      const intervalo = setInterval(() => {
-        setProgreso(p => Math.min(p + 8, 90))
-      }, 200)
+      const mimetype = archivo.type || 'audio/mpeg'
+      const { data: init } = await iniciarUpload(mimetype)
 
-      const { data } = await subirAudio(form)
-      clearInterval(intervalo)
+      const blockBlobClient = new BlockBlobClient(init.sasUrl)
+      await blockBlobClient.uploadData(archivo, {
+        blobHTTPHeaders: { blobContentType: mimetype },
+        onProgress: (ev) => {
+          setProgreso(Math.min(Math.round((ev.loadedBytes / archivo.size) * 100), 99))
+        },
+      })
       setProgreso(100)
+
+      const { data } = await confirmarUpload(init.id, init.blobName)
       setIdTrans(data.id)
       setEstado('procesando')
 

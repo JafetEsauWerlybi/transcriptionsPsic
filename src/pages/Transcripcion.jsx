@@ -422,7 +422,7 @@ export default function Transcripcion() {
           <i className="bi bi-arrow-left" /> Volver
         </button>
         <div className="td-meta">
-          <span className={`badge ${estado === 'completado' ? 'badge-green' : estado === 'procesando' ? 'badge-yellow' : 'badge-red'}`}>
+          <span className={`badge ${estado === 'completado' ? 'badge-green' : (estado === 'procesando' || estado === 'subiendo') ? 'badge-yellow' : 'badge-red'}`}>
             {estado}
           </span>
           <span className="td-info"><i className={`bi ${tipo === 'archivo' ? 'bi-file-earmark-audio' : 'bi-mic'}`} /> {tipo === 'archivo' ? 'Archivo' : 'En vivo'}</span>

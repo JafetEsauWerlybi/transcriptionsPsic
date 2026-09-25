@@ -17,7 +17,8 @@ export const obtenerPerfil = () => api.get("/auth/perfil");
 export const actualizarPerfil = (data) => api.put("/auth/perfil", data);
 
 // AUDIO
-export const subirAudio = (formData) => api.post("/audio/upload", formData);
+export const iniciarUpload = (mimetype) => api.post("/audio/upload/init", { mimetype });
+export const confirmarUpload = (id, blobName) => api.post(`/audio/upload/${id}/commit`, { blobName });
 export const obtenerEstado = (id) => api.get(`/audio/${id}/estado`);
 
 // TRANSCRIPCIONES
